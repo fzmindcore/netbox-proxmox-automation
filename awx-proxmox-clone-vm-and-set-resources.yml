@@ -39,10 +39,10 @@
       api_host: "{{ proxmox_env_info.api_host }}"
       api_port: "{{ proxmox_env_info.api_port }}"
       clone: "{{ vm_config['template'] }}"
-      vmid: "{{ vm_config['template'] }}"
-      name: "{{ vm_config['name'] }}"
-      newid: "{{ vm_config['vmid'] | int | default(omit) }}"
-      agent: 'enabled=1'
+      #vmid: "{{ vm_config['template'] }}" #If not set the next available ID will be fetched from ProxmoxAPI.
+      hostname: "{{ vm_config['name'] }}"
+      #newid: "{{ vm_config['vmid'] | int | default(omit) }}"
+      #agent: 'enabled=1'
       storage: "{{ vm_config['storage'] }}"
       #onboot: "{{ vm_config_create[item].auto_start }}"
       state: present
