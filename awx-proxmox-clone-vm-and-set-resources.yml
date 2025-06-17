@@ -31,7 +31,7 @@
       msg: "ID of template (integer) {{ vm_config['template'] | int }}"
 
   - name: Create VM from a full clone of template
-    community.proxmox.proxmox:
+    community.proxmox.proxmox_kvm:
       node: "{{ proxmox_env_info.node }}"
       api_user: "{{ proxmox_env_info.api_user }}"
       api_token_id: "{{ proxmox_env_info.api_token_id }}"
@@ -40,9 +40,9 @@
       api_port: "{{ proxmox_env_info.api_port }}"
       clone: "{{ vm_config['template'] }}"
       #vmid: "{{ vm_config['template'] }}" #If not set the next available ID will be fetched from ProxmoxAPI.
-      hostname: "{{ vm_config['name'] }}"
-      #newid: "{{ vm_config['vmid'] | int | default(omit) }}"
-      #agent: 'enabled=1'
+      name: "{{ vm_config['name'] }}" 
+      #newid: "{{ vm_config['vmid'] | int | default(omit) }}" #If not set the next available ID will be fetched from ProxmoxAPI.
+      agent: 'enabled=1'
       storage: "{{ vm_config['storage'] }}"
       #onboot: "{{ vm_config_create[item].auto_start }}"
       state: present
@@ -62,7 +62,7 @@
     when: not vm_config['name'] in collected_proxmox_vm
 
   - name: Update Proxmox VMs resource settings
-    community.proxmox.proxmox:
+    community.proxmox.proxmox_kvm:
       node: "{{ proxmox_env_info.node }}"
       api_user: "{{ proxmox_env_info.api_user }}"
       api_token_id: "{{ proxmox_env_info.api_token_id }}"
