@@ -1,0 +1,10 @@
+---
+- name: test kerberos authentication using prsp
+  hosts: all
+  connection: psrp
+  gather_facts: false
+  vars:
+    ansible_psrp_auth: kerberos
+  tasks:
+  - name: win ping
+    win_ping:
