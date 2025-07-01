@@ -1,29 +1,35 @@
 ---
-# Ansible playbook for Windows connections using Kerberos authentication
-- name: Connect to Windows with Kerberos Auth
-  hosts: all
+# First play runs locally to obtain Kerberos TGT
+- name: Obtain Kerberos TGT
+  hosts: localhost
+  connection: local
   gather_facts: false
   vars:
     kerberos_principal: "{{ ansible_user }}@EXAMPLE.COM"
-    ansible_connection: ssh
-    ansible_shell_type: powershell
-    
-    tasks:
+  
+  tasks:
     - name: Obtain Kerberos TGT using kinit
       ansible.builtin.shell: kinit {{ kerberos_principal }}
-      delegate_to: localhost
       changed_when: false
       
     - name: Display obtained Kerberos tickets
       ansible.builtin.shell: klist
-      delegate_to: localhost
       register: klist_output
       changed_when: false
       
     - name: Output TGT information
       ansible.builtin.debug:
         var: klist_output.stdout_lines
-      
+
+# Second play connects to Windows hosts
+- name: Connect to Windows with Kerberos Auth
+  hosts: windows_servers
+  gather_facts: false
+  vars:
+    ansible_connection: ssh
+    ansible_shell_type: powershell
+  
+  tasks:
     - name: Verify connection to Windows machine
       ansible.windows.win_ping:
       
