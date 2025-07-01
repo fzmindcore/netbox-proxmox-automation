@@ -1,8 +1,8 @@
 ---
  - name: obtain kerberos ticket for ssh
  pre_tasks:
- - name: run kinit
-   local_action: shell kinit '{{ ansible_user }}'
+    - name: run kinit
+    local_action: shell kinit '{{ ansible_user }}'
 
  - name: test kerberos authentication over ssh
   hosts: all
