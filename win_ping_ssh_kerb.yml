@@ -12,7 +12,7 @@
   tasks:
     - name: Obtain Kerberos TGT using kinit with password
       ansible.builtin.shell: echo "{{ kerberos_password }}" | kinit {{ kerberos_principal }}
-      no_log: false #troubleshooting
+      no_log: true # to avoid exposing password
       changed_when: false
       
     - name: Display obtained Kerberos tickets
