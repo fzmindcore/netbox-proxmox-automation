@@ -7,7 +7,7 @@
   vars:
     kerberos_principal: "{{ ansible_user }}"
     # Store this in an encrypted vault file, not in the playbook
-    kerberos_password: "{{ vault_kerberos_password }}"
+    kerberos_password: "{{ ansible_password }}"
   
   tasks:
     - name: Obtain Kerberos TGT using kinit with password
