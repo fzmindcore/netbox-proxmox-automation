@@ -3,7 +3,6 @@
  - name: obtain kerberos ticket for ssh
  local_action: shell kinit '{{ ansible_user }}'
 
- tasks:
  - name: test kerberos authentication over ssh
   hosts: all
   connection: ssh
