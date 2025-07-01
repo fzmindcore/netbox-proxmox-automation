@@ -4,7 +4,7 @@
   hosts: all
   gather_facts: false
   vars:
-    kerberos_principal: "{{ ansible_user }}"
+    kerberos_principal: "{{ ansible_user }}@EXAMPLE.COM"
     ansible_connection: ssh
     ansible_shell_type: powershell
   
@@ -13,6 +13,16 @@
       ansible.builtin.shell: kinit {{ kerberos_principal }}
       delegate_to: localhost
       changed_when: false
+      
+    - name: Display obtained Kerberos tickets
+      ansible.builtin.shell: klist
+      delegate_to: localhost
+      register: klist_output
+      changed_when: false
+      
+    - name: Output TGT information
+      ansible.builtin.debug:
+        var: klist_output.stdout_lines
       
   tasks:
     - name: Verify connection to Windows machine
