@@ -1,0 +1,15 @@
+---
+  pre_tasks:
+ - name: obtain kerberos ticket for ssh
+ local_action: shell kinit '{{ ansible_user }}'
+
+ tasks:
+ - name: test kerberos authentication over ssh
+  hosts: all
+  connection: ssh
+  gather_facts: true
+  vars:
+    ansible_ssh_common_args: -o GSSAPIDelegateCredentials=yes
+  tasks:
+  - name: win ping
+    win_ping:
