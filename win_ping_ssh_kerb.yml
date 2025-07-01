@@ -6,15 +6,13 @@
   gather_facts: false
   vars:
     kerberos_principal: "{{ ansible_user }}"
-    kerberos_password: "{{ ansible_password }}"
+    # Store this in an encrypted vault file, not in the playbook
+    kerberos_password: "{{ vault_kerberos_password }}"
   
   tasks:
     - name: Obtain Kerberos TGT using kinit with password
-      ansible.builtin.expect:
-        command: kinit {{ kerberos_principal }}
-        responses:
-          "Password for {{ kerberos_principal }}:": "{{ kerberos_password }}"
-        timeout: 30
+      ansible.builtin.shell: echo "{{ kerberos_password }}" | kinit {{ kerberos_principal }}
+      no_log: true
       changed_when: false
       
     - name: Display obtained Kerberos tickets
