@@ -31,6 +31,8 @@
   vars:
     ansible_connection: ssh
     ansible_shell_type: powershell
+    ansible_ssh_common_args: '-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes -vvv'
+    ansible_port: 22
   
   tasks:
     - name: Verify connection to Windows machine
