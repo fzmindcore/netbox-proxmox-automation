@@ -5,7 +5,7 @@
   connection: local
   gather_facts: false
   vars:
-    kerberos_principal: "{{ ansible_user }}@EXAMPLE.COM"
+    kerberos_principal: "{{ ansible_user }}"
   
   tasks:
     - name: Obtain Kerberos TGT using kinit
@@ -23,7 +23,7 @@
 
 # Second play connects to Windows hosts
 - name: Connect to Windows with Kerberos Auth
-  hosts: windows_servers
+  hosts: all
   gather_facts: false
   vars:
     ansible_connection: ssh
