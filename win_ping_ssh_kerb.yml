@@ -4,7 +4,7 @@
   hosts: windows_servers
   gather_facts: false
   vars:
-    kerberos_principal: {{ ansible_user }}
+    kerberos_principal: "{{ ansible_user }}"
     ansible_connection: ssh
     ansible_shell_type: powershell
   
