@@ -27,7 +27,7 @@
 # Second play connects to Windows hosts
 - name: Connect to Windows with Kerberos Auth
   hosts: all
-  gather_facts: false
+  gather_facts: true
   vars:
     ansible_connection: ssh
     ansible_shell_type: powershell
@@ -37,16 +37,3 @@
   tasks:
     - name: Verify connection to Windows machine
       ansible.windows.win_ping:
-      
-    - name: Get system information
-      ansible.windows.win_shell: |
-        $system_params = @{
-          computer_name = $env:COMPUTERNAME
-          class = 'Win32_OperatingSystem'
-        }
-        Get-WmiObject @system_params | Select-Object Caption, Version, OSArchitecture
-      register: system_info
-      
-    - name: Display system information
-      ansible.builtin.debug:
-        var: system_info.stdout_lines
