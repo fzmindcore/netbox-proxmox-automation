@@ -6,10 +6,16 @@
   gather_facts: false
   vars:
     kerberos_principal: "{{ ansible_user }}"
+    kerberos_password: "{{ ansible_password }}"
   
   tasks:
-    - name: Obtain Kerberos TGT using kinit
-      ansible.builtin.shell: kinit {{ kerberos_principal }}
+    - name: Obtain Kerberos TGT using kinit with password
+      ansible.builtin.expect:
+        command: kinit {{ kerberos_principal }}
+        responses:
+          "Password for {{ kerberos_principal }}:": "{{ kerberos_password }}"
+        timeout: 30
+      no_log: true
       changed_when: false
       
     - name: Display obtained Kerberos tickets
