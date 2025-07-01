@@ -1,15 +1,32 @@
 ---
- - name: obtain kerberos ticket for ssh
- pre_tasks:
-    - name: run kinit
-    local_action: shell kinit '{{ ansible_user }}'
-
- - name: test kerberos authentication over ssh
-  hosts: all
-  connection: ssh
-  gather_facts: true
+# Ansible playbook for Windows connections using Kerberos authentication
+- name: Connect to Windows with Kerberos Auth
+  hosts: windows_servers
+  gather_facts: false
   vars:
-    ansible_ssh_common_args: -o GSSAPIDelegateCredentials=yes
+    kerberos_principal: {{ ansible_user }}
+    ansible_connection: ssh
+    ansible_shell_type: powershell
+  
+  pre_tasks:
+    - name: Obtain Kerberos TGT using kinit
+      ansible.builtin.shell: kinit {{ kerberos_principal }}
+      delegate_to: localhost
+      changed_when: false
+      
   tasks:
-  - name: win ping
-    win_ping:
+    - name: Verify connection to Windows machine
+      ansible.windows.win_ping:
+      
+    - name: Get system information
+      ansible.windows.win_shell: |
+        $system_params = @{
+          computer_name = $env:COMPUTERNAME
+          class = 'Win32_OperatingSystem'
+        }
+        Get-WmiObject @system_params | Select-Object Caption, Version, OSArchitecture
+      register: system_info
+      
+    - name: Display system information
+      ansible.builtin.debug:
+        var: system_info.stdout_lines
